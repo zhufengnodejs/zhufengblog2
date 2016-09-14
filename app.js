@@ -7,14 +7,18 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 //用来处理请求中的cookie req.cookies 会把请求头中的cookie字段包装成对象放在req.cookies里
 var cookieParser = require('cookie-parser');
+var session = require('express-session');
+var MongoStore = require('connect-mongo')(session);
 //处理请求体 req.body 会把请求体转成对象放在req.body上
 //请求体分为json和urlencoded
 var bodyParser = require('body-parser');
+var flash = require('connect-flash');
 //首页路由
 var routes = require('./routes/index');
 // 用户路由，用来响应对用户的操作
 var user = require('./routes/user');
 var article = require('./routes/article');
+require('./db');
 //得到请求监听函数
 var app = express();
 
@@ -36,6 +40,23 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 //处理cookie req.cookies对象
 app.use(cookieParser());
+// req.session
+app.use(session({
+  secret:'zfpx',
+  resave:true,
+  saveUninitialized:true,
+  store:new MongoStore({
+    url:'mongodb://localhost:27017/zhufengblog2'
+  })
+}));
+app.use(flash());
+app.use(function(req,res,next){
+  //res.locals 是真正用来渲染模板的对象
+  res.locals.success = req.flash('success').toString();
+  res.locals.error = req.flash('error').toString();
+  res.locals.user = req.session.user;
+  next();
+});
 //静态文件中间件
 app.use(express.static(path.join(__dirname, 'public')));
 
