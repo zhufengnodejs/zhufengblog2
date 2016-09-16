@@ -1,0 +1,51 @@
+<%- include ../include/header.html%>
+<%
+   articles.forEach(function(article){%>
+    <div class="media">
+        <a class="media-left" href="#">
+            <img src="<%=article.user.avatar%>" alt="<%=article.user.username%>">
+        </a>
+        <div class="media-body">
+            <h4 class="media-heading">
+                <a href="/article/detail/<%=article._id%>"><%=article.title%></a>
+
+            </h4>
+            <p>
+                <%-article.content%>
+            </p>
+            <p>
+                作者:<%=article.user.username%>|
+                发表时间:<%=article.createAt.toLocaleString()%>|
+                评论数:<%=article.comments.length%>|
+                pv:<%=article.pv%>
+            </p>
+        </div>
+    </div>
+<%});
+%>
+<nav>
+    <ul class="pagination">
+        <%
+          if(pageNum>1){%>
+        <li><a href="/article/list?keyword=<%=keyword%>&pageNum=<%=pageNum-1%>&pageSize=<%=pageSize%>">&laquo;</a></li>
+<%        }
+        %>
+
+        <%
+         for(var i=1;i<=totalPages;i++){
+           %>
+               <li class="<%=i==pageNum?'active':''%>"><a href="/article/list?keyword=<%=keyword%>&pageNum=<%=i%>&pageSize=<%=pageSize%>"><%=i%></a></li>
+           <%
+         }
+        %>
+        <%
+        if(pageNum < totalPages){%>
+        <li><a href="/article/list?keyword=<%=keyword%>&pageNum=<%=pageNum+1%>&pageSize=<%=pageSize%>">&raquo;</a></li>
+        <%        }
+        %>
+
+    </ul>
+</nav>
+
+
+<%- include ../include/footer.html%>

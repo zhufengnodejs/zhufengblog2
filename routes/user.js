@@ -1,14 +1,15 @@
 var express = require('express');
 var util = require('../util');
+var middleware = require('../middleware');
 //生成一个路由实例
 var router = express.Router();
 
 //注册
-router.get('/reg', function(req, res, next) {
+router.get('/reg',middleware.checkNotLogin, function(req, res, next) {
   res.render('user/reg');
 });
 //提交注册表单
-router.post('/reg',function(req,res,next){
+router.post('/reg',middleware.checkNotLogin,function(req,res,next){
   var user = req.body;
   if(user.password != user.repassword){
     req.flash('error','密码和重复不一致');
@@ -29,10 +30,10 @@ router.post('/reg',function(req,res,next){
   })
 });
 //登陆
-router.get('/login', function(req, res, next) {
+router.get('/login',middleware.checkNotLogin, function(req, res, next) {
   res.render('user/login');
 });
-router.post('/login', function(req, res, next) {
+router.post('/login',middleware.checkNotLogin, function(req, res, next) {
   var user = req.body;
   user.password = util.md5(user.password);
   Model('User').findOne(user).then(function(user){
@@ -50,7 +51,7 @@ router.post('/login', function(req, res, next) {
   })
 });
 //退出
-router.get('/logout', function(req, res, next) {
+router.get('/logout',middleware.checkLogin, function(req, res, next) {
   req.session.user = null;
   res.redirect('/user/login');
 });

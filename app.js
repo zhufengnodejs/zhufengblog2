@@ -55,6 +55,7 @@ app.use(function(req,res,next){
   res.locals.success = req.flash('success').toString();
   res.locals.error = req.flash('error').toString();
   res.locals.user = req.session.user;
+  res.locals.keyword = '';
   next();
 });
 //静态文件中间件
@@ -67,9 +68,10 @@ app.use('/article', article);
 // catch 404 and forward to error handler
 //捕获404错误并且转向错误处理中间件
 app.use(function(req, res, next) {
-  var err = new Error('Not Found');
+  /*var err = new Error('Not Found');
   err.status = 404;
-  next(err);
+  next(err);*/
+  res.render('404');
 });
 
 // error handlers 错误处理

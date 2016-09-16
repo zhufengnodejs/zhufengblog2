@@ -4,7 +4,7 @@ var router = express.Router();
 /* GET home page. */
 /*获得主页*/
 router.get('/', function(req, res, next) {
-  res.render('index', { title: '首页' });
+  res.redirect('/article/list');
 });
 
 module.exports = router;

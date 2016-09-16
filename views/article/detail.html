@@ -1,0 +1,52 @@
+<%- include ../include/header.html%>
+<div class="panel panel-success">
+    <div class="panel-heading">
+        <%=article.title%>
+    </div>
+    <div class="panel-body">
+        <%-article.content%>
+    </div>
+    <div class="panel-footer">
+        <a href="/article/update/<%=article._id%>" class="btn btn-warning">修改</a>
+        <a href="/article/delete/<%=article._id%>" class="btn btn-danger">删除</a>
+    </div>
+</div>
+
+<div class="panel panel-success">
+    <div class="panel-body">
+       <%
+        if(article.comments){
+            article.comments.forEach(function(comment){%>
+        <div class="media">
+            <a class="media-left" href="#">
+                <img src="<%=comment.user.avatar%>" alt="<%=comment.user.username%>">
+            </a>
+            <div class="media-body">
+                <p>
+                    <%-comment.content%>
+                </p>
+                <p>
+                    作者:<%=comment.username%>|
+                    发表时间:<%=comment.createAt.toLocaleString()%>
+                </p>
+            </div>
+        </div>
+            <%});
+        }
+        %>
+    </div>
+</div>
+
+<div class="panel panel-success">
+    <form method="post" action="/article/comment">
+        <input value="<%=article._id%>" type="hidden" class="form-control" name="articleId">
+        <div class="panel-body">
+            <textarea class="form-control" name="content" id="content" cols="30" rows="10"></textarea>
+        </div>
+        <div class="panel-footer">
+            <button class="btn btn-primary" type="submit">评论</button>
+        </div>
+    </form>
+
+</div>
+<%- include ../include/footer.html%>
